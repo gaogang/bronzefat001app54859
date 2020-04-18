@@ -1,5 +1,4 @@
 import React from 'react';
-import clsx from 'clsx';
 
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import AppBar from '@material-ui/core/AppBar';
@@ -9,11 +8,10 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
-const drawerWidth = 240;
-
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex',
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
   },
 
   appBar: {
@@ -24,22 +22,8 @@ const useStyles = makeStyles((theme) => ({
     }),
   },
 
-  appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-
-  iconButtonLabel: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-
-  subToolbar: {
-    background: 'lightgrey'
+  actionBar: {
+    background: 'white'
   },
 
   title: {
@@ -49,28 +33,26 @@ const useStyles = makeStyles((theme) => ({
 
 export default () => {
   const classes = useStyles();
-  const [open] = React.useState(false);
 
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
+      <AppBar position="static" className={classes.appBar}>
         <Toolbar className={classes.toolbar}>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             Solution Architecture
           </Typography>
         </Toolbar>
-        <Toolbar className={classes.subToolbar}>
-          <Button
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            startIcon={<AddCircleOutlineIcon />}
-          >
-            New
-          </Button>
-        </Toolbar>
       </AppBar>
+      <Toolbar className={classes.actionBar}>
+        <Button
+          variant="outlined"
+          color="primary"
+          className={classes.button}
+          startIcon={<AddCircleOutlineIcon />}>
+          New
+        </Button>
+      </Toolbar>
     </div>
   );
 }
