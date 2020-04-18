@@ -1,5 +1,5 @@
 import React from 'react';
-import SolutionPage from './pages/solution';
+import SolutionListPage from './pages/solutionList';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 
@@ -7,10 +7,10 @@ export default () => (
   <BrowserRouter>
     <Switch>
       <Route exact strict path="/">
-        <SolutionPage />
+        <SolutionListPage />
       </Route>
       <Route exact strict path="/solution">
-        <SolutionPage />
+        <SolutionListPage />
       </Route>
       <Route>
         <div>404: Not Found</div>
