@@ -23,6 +23,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { blue, red } from '@material-ui/core/colors';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -127,6 +129,7 @@ export default () => {
             type: 'app',
             runtime: 'reactjs',
             status: 'pending',
+            isPrivate: true,
             position: {
                 top: 250, 
                 left: 50
@@ -137,6 +140,7 @@ export default () => {
             type: 'db',
             runtime: 'cosmosdb',
             status: 'pending',
+            isPrivate: false,
             position: {
                 top: 250, 
                 left: 550
@@ -212,12 +216,17 @@ export default () => {
                             title={bb.name}
                             subheader={bb.status}
                         />
-                        <CardContent>
-                            <Typography variant="body2" color="textSecondary" component="p">
-                                {bb.runtime}
-                            </Typography>
-                        </CardContent>
                         <CardActions disableSpacing>
+                            <FormControlLabel control={<Switch
+                                //checked={state.checkedA}
+                                //onChange={handleChange}
+                                name="isPrivate"
+                                inputProps={{ 'aria-label': 'Is private' }}
+                                />} 
+                                label={<Typography variant="body2" color="textSecondary">private</Typography>}
+                                labelPlacement="start"
+                            />
+                            
                             <IconButton aria-label="add-ons">
                                 <AddCircleOutlineIcon />
                             </IconButton>
