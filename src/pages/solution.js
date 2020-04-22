@@ -13,18 +13,23 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import clsx from 'clsx';
 import Collapse from '@material-ui/core/Collapse';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import PublishIcon from '@material-ui/icons/Publish';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
+import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import Switch from '@material-ui/core/Switch';
 import { makeStyles } from '@material-ui/core/styles';
 import { blue, red } from '@material-ui/core/colors';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -80,10 +85,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   avatar: {
-    fontSize: 12
-  },
-
-  avatarApp: {
+    fontSize: 12,
     backgroundColor: red[500]
   },
 
@@ -117,14 +119,37 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+const addonTypes = [
+    {
+        value: 'Api',
+        label: 'Api',
+    },
+    {
+        value: 'cosmosdb',
+        label: 'Cosmos DB',
+    },
+    {
+        value: 'keyvault',
+        label: 'Key Vault'
+    },
+    {
+        value: 'sfconnect',
+        label: 'Salesforce Connect'
+    }
+  ];
+
 export default () => {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [expanded, setExpanded] = React.useState(false);
+  const [addonDialogOpen, setAddonDialogOpen] = React.useState(false);
+  const [selectedBb, selectBb] = React.useState(null);
+  const [selectedAddonType, selectAddonType] = React.useState('cosmosdb');
 
   const mock = {
       buildingBlocks: [
         {
+            id: 'bb 1',
             name: 'windermere',
             type: 'app',
             runtime: 'reactjs',
@@ -136,6 +161,7 @@ export default () => {
             }
         },
         {
+            id: 'bb 2',
             name: 'windermeredb',
             type: 'db',
             runtime: 'cosmosdb',
@@ -157,6 +183,32 @@ export default () => {
     setValue(newValue);
   };
 
+  const handleNewAddonClick = (bb) => {
+      if (bb.type !== 'app') {
+          return;
+      }
+
+    selectBb(bb);
+    setAddonDialogOpen(true);
+  };
+
+  const handleAddonDialogClose = () => {
+        setAddonDialogOpen(false);
+  }
+
+  const handleNewBbClick = () => {
+        alert('create new bb');
+  }
+
+  const handleAddonTypeChange = (event) => {
+    selectAddonType(event.target.value);
+  }
+
+  const handleAddonCreate = () => {
+      alert('create ' + selectedAddonType);
+  }
+
+
   return (
     <div className={classes.root}>
       <AppBar position="static" className={classes.appBar}>
@@ -170,6 +222,44 @@ export default () => {
           <Tab label="Production" {...a11yProps(1)} />
         </Tabs>
       </AppBar>
+      <Dialog open={addonDialogOpen} onClose={handleAddonDialogClose} aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">{!selectedBb ? '' : selectedBb.name}: Add-on</DialogTitle>
+        <DialogContent>
+          <TextField
+            margin="dense"
+            id="type"
+            label="Add-on Type"
+            select
+            value={selectedAddonType}
+            onChange={handleAddonTypeChange}
+            fullWidth
+            SelectProps={{
+              native: true,
+            }}
+          >
+            {addonTypes.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+          </TextField>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Add-on name"
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleAddonDialogClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleAddonCreate} color="primary">
+            Create
+          </Button>
+        </DialogActions>
+      </Dialog>
       <TabPanel value={value} index={0}>
         <Toolbar className={classes.actionToolbar}>
           <Button
@@ -177,6 +267,7 @@ export default () => {
             variant="outlined"
             color="primary"
             startIcon={<AddCircleOutlineIcon />}
+            onClick={handleNewBbClick}
           >
             New
           </Button>
@@ -202,7 +293,6 @@ export default () => {
                         <CardHeader
                             avatar={
                                 <Avatar aria-label="bbtype" className={clsx(classes.avatar, {
-                                    [classes.avatarApp] : bb.type === 'app',
                                     [classes.avatarDb] : bb.type === 'db',
                                 })}>
                                     {bb.type}
@@ -226,10 +316,13 @@ export default () => {
                                 label={<Typography variant="body2" color="textSecondary">private</Typography>}
                                 labelPlacement="start"
                             />
-                            
-                            <IconButton aria-label="add-ons">
-                                <AddCircleOutlineIcon />
-                            </IconButton>
+                            { bb.type === 'app' &&
+                                <IconButton 
+                                    aria-label="add-ons" 
+                                    onClick={() => handleNewAddonClick(bb)} >
+                                    <AddCircleOutlineIcon />
+                                </IconButton>
+                            }
                             <IconButton
                                 className={clsx(classes.expand, {
                                     [classes.expandOpen]: expanded,
@@ -248,7 +341,8 @@ export default () => {
                         </Collapse>
                     </Card>
                 );
-            })}
+            })
+        }
         </TabPanel>
         <TabPanel value={value} index={1}>
             <Toolbar className={classes.actionBar}>
