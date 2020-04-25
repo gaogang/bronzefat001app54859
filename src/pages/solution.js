@@ -6,12 +6,22 @@ import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline';
+import DescriptionIcon from '@material-ui/icons/Description';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Divider from '@material-ui/core/Divider';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Grid from '@material-ui/core/Grid';
+import LockIcon from '@material-ui/icons/Lock';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import PublishIcon from '@material-ui/icons/Publish';
-import teal from '@material-ui/core/colors/teal';
+import Switch from '@material-ui/core/Switch';
+import grey from '@material-ui/core/colors/grey';
 import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -46,13 +56,19 @@ const useStyles = makeStyles((theme) => ({
   },
 
   info: {
-    fontFamily: 'calibri',
-    fontSize: 12
+    fontFamily: 'Roboto',
+    fontSize: 14
+  },
+
+  sidebar: {
+    background: grey[200],
+    width: 300, 
+    padding: 10
   },
 
   title: {
     flexGrow: 1,
-    fontFamily: 'Calibri'
+    fontFamily: 'Roboto'
   }
 }));
 
@@ -74,6 +90,10 @@ const addonTypes = [
         label: 'Salesforce Connect'
     }
   ];
+
+function ListItemLink(props) {
+  return <ListItem button component="a" {...props} />;
+}
 
 export default () => {
   const classes = useStyles();
@@ -147,7 +167,7 @@ export default () => {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar position="static" className={classes.appBar}>
+      <AppBar position="static" className={classes.appBar} elevation={0}>
         <Toolbar className={classes.toolbar}>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             Solution Architecture
@@ -219,48 +239,137 @@ export default () => {
         <div style={{width: '100%' }}>
           <Box display='flex' flexDirection='row'>
             <Stage width={window.innerWidth - 300 } height={window.innerHeight}>
-          <Layer>
-          {
-            mock.buildingBlocks.map((component, i) => {
-                return (
-                  <Group 
-                    name={component.id}
-                    draggable={true}
-                    onClick={(e) => handleComponentClick(e, component)}>
-                    <Rect
-                      name={component.id}
-                      x={component.position.left}
-                      y={component.position.top}
-                      width={componentWidth}
-                      height={50}
-                      fill={component.isPrivate ? 'pink' : 'lightgreen'}
-                      stroke={selectedComponent && selectedComponent.id === component.id ? 'black' : 'gray'}
-                      strokeWidth={selectedComponent && selectedComponent.id === component.id ? 1.0 : 0.2}
-                    />
-                    <Text 
-                      name={component.id}
-                      text={component.name}
-                      align='center'
-                      fontSize={16}
-                      fontFamily='Calibri'
-                      x={component.position.left}
-                      y={component.position.top + 3}
-                      width={componentWidth}
-                      >
-                    </Text>
-                </Group>);
-            })
-        }
-        
-        </Layer>
-        </Stage>
-            <Box style={{background: teal[50], width: 300, padding: 10 }}>
+              <Layer>
+              {
+                mock.buildingBlocks.map((component, i) => {
+                    return (
+                      <Group 
+                        name={component.id}
+                        draggable={true}
+                        onClick={(e) => handleComponentClick(e, component)}>
+                        <Rect
+                          name={component.id}
+                          x={component.position.left}
+                          y={component.position.top}
+                          width={componentWidth}
+                          height={50}
+                          fill={component.isPrivate ? 'pink' : 'lightgreen'}
+                          stroke={selectedComponent && selectedComponent.id === component.id ? 'black' : 'gray'}
+                          strokeWidth={selectedComponent && selectedComponent.id === component.id ? 1.0 : 0.2}
+                        />
+                        <Text 
+                          name={component.id}
+                          text={component.name}
+                          align='center'
+                          fontSize={16}
+                          fontFamily='Calibri'
+                          x={component.position.left}
+                          y={component.position.top + 3}
+                          width={componentWidth}
+                          >
+                        </Text>
+                    </Group>);
+                })
+              }
+              </Layer>
+            </Stage>
+            <Box className={classes.sidebar}>
               <Typography className={classes.title} variant="h5" component="h2" align='center'>
-                    BronzeFat
+                BronzeFat
               </Typography>
               <Typography className={classes.info} color="textSecondary" align='center'>
                 (App)
               </Typography>
+              <Divider />
+              <Box style={{marginTop: 20}}>
+                <Grid container spacing={1}>
+                  <Grid item xs>
+                    <Typography className={classes.info} align='right'>
+                      Status:
+                    </Typography>
+                  </Grid>
+                  <Grid item xs>
+                    <Typography className={classes.info} align='left'>
+                      Active
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2}>
+                  <Grid item xs>
+                    <Typography className={classes.info} align='right'>
+                      Runtime:
+                    </Typography>
+                  </Grid>
+                  <Grid item xs>
+                    <Typography className={classes.info} align='left'>
+                      ReactJS
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2}>
+                  <Grid item xs>
+                    <Typography className={classes.info} align='right'>
+                      Resource group:
+                    </Typography>
+                  </Grid>
+                  <Grid item xs>
+                    <Typography className={classes.info} align='left'>
+                      BronzeFatDemo
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2}>
+                  <Grid item xs>
+                    <Typography className={classes.info} align='right'>
+                      Subscription:
+                    </Typography>
+                  </Grid>
+                  <Grid item xs>
+                    <Typography className={classes.info} align='left'>
+                      External Dev
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Box>
+              <Box style={{marginTop: 20}} align='center'>
+                <Typography className={classes.info} align='left'>
+                  Network security
+                </Typography>
+                <Divider />
+                <FormControlLabel
+                  control={
+                    <Switch
+                      name="isPrivate"
+                      color="primary"
+                    />
+                  }
+                  label={<Typography className={classes.info} align='left'>Internet facing:</Typography>}
+                  labelPlacement="start"
+                />
+              </Box>
+              <Box style={{marginTop: 20}}>
+                <Typography className={classes.info} align='left'>
+                  Add-ons
+                </Typography>
+                <Divider />
+                <List component="nav">
+                  <ListItem button dense>
+                    <ListItemIcon>
+                      <DescriptionIcon style={{fontSize: 16}} />
+                    </ListItemIcon>
+                    <ListItemText disableTypography primary={<Typography className={classes.info}>Cosmos Db</Typography>} />
+                  </ListItem>
+                  <ListItem button dense>
+                    <ListItemIcon>
+                      <LockIcon style={{fontSize: 16}} />
+                    </ListItemIcon>
+                    <ListItemText disableTypography primary={<Typography className={classes.info}>Key Vault</Typography>} />
+                  </ListItem>
+                  <ListItem button>
+                    <ListItemText disableTypography primary={<Typography className={classes.info}>More...</Typography>} />
+                  </ListItem>
+                </List>
+              </Box>
             </Box>
           </Box>
         </div>
