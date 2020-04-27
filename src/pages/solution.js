@@ -91,10 +91,6 @@ const addonTypes = [
     }
   ];
 
-function ListItemLink(props) {
-  return <ListItem button component="a" {...props} />;
-}
-
 export default () => {
   const classes = useStyles();
   const [addonDialogOpen, setAddonDialogOpen] = React.useState(false);
@@ -274,102 +270,110 @@ export default () => {
               </Layer>
             </Stage>
             <Box className={classes.sidebar}>
-              <Typography className={classes.title} variant="h5" component="h2" align='center'>
-                BronzeFat
-              </Typography>
-              <Typography className={classes.info} color="textSecondary" align='center'>
-                (App)
-              </Typography>
-              <Divider />
-              <Box style={{marginTop: 20}}>
-                <Grid container spacing={1}>
-                  <Grid item xs>
-                    <Typography className={classes.info} align='right'>
-                      Status:
+              { selectedComponent
+                ? <div>
+                    <Typography className={classes.title} variant="h5" component="h2" align='center'>
+                      {selectedComponent.name}
                     </Typography>
-                  </Grid>
-                  <Grid item xs>
-                    <Typography className={classes.info} align='left'>
-                      Active
+                    <Typography className={classes.info} color="textSecondary" align='center'>
+                      ({selectedComponent.type})
                     </Typography>
-                  </Grid>
-                </Grid>
-                <Grid container spacing={2}>
-                  <Grid item xs>
-                    <Typography className={classes.info} align='right'>
-                      Runtime:
-                    </Typography>
-                  </Grid>
-                  <Grid item xs>
-                    <Typography className={classes.info} align='left'>
-                      ReactJS
-                    </Typography>
-                  </Grid>
-                </Grid>
-                <Grid container spacing={2}>
-                  <Grid item xs>
-                    <Typography className={classes.info} align='right'>
-                      Resource group:
-                    </Typography>
-                  </Grid>
-                  <Grid item xs>
-                    <Typography className={classes.info} align='left'>
-                      BronzeFatDemo
-                    </Typography>
-                  </Grid>
-                </Grid>
-                <Grid container spacing={2}>
-                  <Grid item xs>
-                    <Typography className={classes.info} align='right'>
-                      Subscription:
-                    </Typography>
-                  </Grid>
-                  <Grid item xs>
-                    <Typography className={classes.info} align='left'>
-                      External Dev
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Box>
-              <Box style={{marginTop: 20}} align='center'>
-                <Typography className={classes.info} align='left'>
-                  Network security
-                </Typography>
-                <Divider />
-                <FormControlLabel
-                  control={
-                    <Switch
-                      name="isPrivate"
-                      color="primary"
-                    />
-                  }
-                  label={<Typography className={classes.info} align='left'>Internet facing:</Typography>}
-                  labelPlacement="start"
-                />
-              </Box>
-              <Box style={{marginTop: 20}}>
-                <Typography className={classes.info} align='left'>
-                  Add-ons
-                </Typography>
-                <Divider />
-                <List component="nav">
-                  <ListItem button dense>
-                    <ListItemIcon>
-                      <DescriptionIcon style={{fontSize: 16}} />
-                    </ListItemIcon>
-                    <ListItemText disableTypography primary={<Typography className={classes.info}>Cosmos Db</Typography>} />
-                  </ListItem>
-                  <ListItem button dense>
-                    <ListItemIcon>
-                      <LockIcon style={{fontSize: 16}} />
-                    </ListItemIcon>
-                    <ListItemText disableTypography primary={<Typography className={classes.info}>Key Vault</Typography>} />
-                  </ListItem>
-                  <ListItem button>
-                    <ListItemText disableTypography primary={<Typography className={classes.info}>More...</Typography>} />
-                  </ListItem>
-                </List>
-              </Box>
+                    <Divider />
+                    <Box style={{marginTop: 20}}>
+                      <Grid container spacing={1}>
+                        <Grid item xs={3}>
+                          <Typography className={classes.info}>
+                            Status:
+                          </Typography>
+                        </Grid>
+                        <Grid item xs>
+                          <Typography className={classes.info}>
+                            {selectedComponent.status}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                      <Grid container spacing={2}>
+                        <Grid item xs={3}>
+                          <Typography className={classes.info}>
+                            Runtime:
+                          </Typography>
+                        </Grid>
+                        <Grid item xs>
+                          <Typography className={classes.info}>
+                            {selectedComponent.runtime}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                      <Grid container spacing={2}>
+                        <Grid item xs={3}>
+                          <Typography className={classes.info}>
+                            Resource group:
+                          </Typography>
+                        </Grid>
+                        <Grid item xs>
+                          <Typography className={classes.info}>
+                            {selectedComponent.resourceGroup}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                      <Grid container spacing={2}>
+                        <Grid item xs={3}>
+                          <Typography className={classes.info}>
+                            Subscription:
+                          </Typography>
+                        </Grid>
+                        <Grid item xs>
+                          <Typography className={classes.info}>
+                            {selectedComponent.subscription}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Box>
+                    <Box style={{marginTop: 20}}>
+                      <Typography className={classes.info} align='left'>
+                        Network security
+                      </Typography>
+                      <Divider />
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            name="isPrivate"
+                            color="primary"
+                            checked={selectedComponent.isPrivate}
+                          />
+                        }
+                        label={<Typography className={classes.info} align='left'>Internet facing:</Typography>}
+                        labelPlacement="start"
+                      />
+                    </Box>
+                    <Box style={{marginTop: 20}}>
+                      <Typography className={classes.info} align='left'>
+                        Add-ons
+                      </Typography>
+                      <Divider />
+                      <List component="nav">
+                        <ListItem button dense>
+                          <ListItemIcon>
+                            <DescriptionIcon style={{fontSize: 16}} />
+                          </ListItemIcon>
+                          <ListItemText disableTypography primary={<Typography className={classes.info}>Cosmos Db</Typography>} />
+                        </ListItem>
+                        <ListItem button dense>
+                          <ListItemIcon>
+                            <LockIcon style={{fontSize: 16}} />
+                          </ListItemIcon>
+                          <ListItemText disableTypography primary={<Typography className={classes.info}>Key Vault</Typography>} />
+                        </ListItem>
+                        <ListItem button>
+                          <ListItemText disableTypography primary={<Typography className={classes.info}>More...</Typography>} />
+                        </ListItem>
+                      </List>
+                    </Box>
+                  </div>
+                : <Typography className={classes.title} variant="h5" component="h2" align='center'>
+                    Select a component...
+                  </Typography>
+              }
             </Box>
           </Box>
         </div>
