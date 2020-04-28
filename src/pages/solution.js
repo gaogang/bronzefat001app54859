@@ -14,7 +14,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Divider from '@material-ui/core/Divider';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Grid from '@material-ui/core/Grid';
-import LockIcon from '@material-ui/icons/Lock';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -28,6 +27,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { Stage, Layer, Group, Rect, Text, Arrow } from 'react-konva';
+
+import PositionComponent from '../utils/positionComponent'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -72,22 +73,22 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const addonTypes = [
+const addons = [
     {
-        value: 'Api',
-        label: 'Api',
+      name: 'Api',
+      label: 'Api'
     },
     {
-        value: 'cosmosdb',
-        label: 'Cosmos DB',
+      name: 'cosmosdb',
+      label: 'Cosmos DB',
     },
     {
-        value: 'keyvault',
-        label: 'Key Vault'
+      name: 'keyvault',
+      label: 'Key Vault'
     },
     {
-        value: 'sfconnect',
-        label: 'Salesforce Connect'
+      name: 'sfconnect',
+      label: 'Salesforce Connect'
     }
   ];
 
@@ -95,69 +96,76 @@ export default () => {
   const classes = useStyles();
   const [addonDialogOpen, setAddonDialogOpen] = React.useState(false);
   const [selectedComponent, selectComponent] = React.useState(null);
-  const [selectedAddonType, selectAddonType] = React.useState('cosmosdb');
 
   const componentWidth = 150;
+  const componentHeight = 50;
 
   const mock = {
       buildingBlocks: [
         {
+          key: '3c639eef-fb77-47fa-9176-3fd6f52f5430',
             id: 'bb 1',
+            orderId: 0,
             name: 'windermere',
             type: 'app',
             runtime: 'reactjs',
             status: 'pending',
             isPrivate: false,
             position: {
-                top: 50, 
-                left: 50
+              mode: 'auto'
             }
         },
         {
+          key: '12e5a4da-1be6-4a77-a644-87eae218eb7b',
             id: 'bb 2',
+            orderId: 1,
             name: 'cosmos db',
             type: 'db',
             runtime: 'cosmosdb',
             status: 'pending',
             isPrivate: true,
             position: {
-                top: 50, 
-                left: 550
+              mode: 'auto'
             }
         },
         {
+          key: '74989886-609b-447c-8593-a06c8b95c932',
           id: 'bb 3',
+          orderId: 0,
           name: 'keyvault',
-          type: 'db',
+          type: 'store',
           runtime: 'keyvault',
           status: 'pending',
           isPrivate: true,
           position: {
-              top: 150, 
-              left: 550
+              mode: 'auto'
           }
       },
       ]
-  }
-
-  const handleAddonDialogClose = () => {
-    setAddonDialogOpen(false);
   }
 
   const handleNewBbClick = () => {
         alert('create new bb');
   }
 
-  const handleAddonTypeChange = (event) => {
-    selectAddonType(event.target.value);
+  const handleAddonClick = (e, type) => {
+    if (type === 'Api') {
+      setAddonDialogOpen(true);
+    } else {
+      alert('sorry, we are still under construction!!')
+    }
   }
 
-  const handleAddonCreate = () => {
-    alert('create ' + selectedAddonType);
+  const handleAddonDialogClose = () => {
+    setAddonDialogOpen(false);
   }
 
   const handleComponentClick = (e, component) => {
     selectComponent(component);
+  }
+
+  const createApiClick = (e) => {
+
   }
 
   return (
@@ -194,26 +202,8 @@ export default () => {
         </Toolbar>
       </AppBar>
       <Dialog open={addonDialogOpen} onClose={handleAddonDialogClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">{!selectedComponent ? '' : selectedComponent.name}: Add-on</DialogTitle>
+        <DialogTitle id="form-dialog-title">{selectedComponent ? selectedComponent.name : ''} add-on - Api</DialogTitle>
         <DialogContent>
-          <TextField
-            margin="dense"
-            id="type"
-            label="Add-on Type"
-            select
-            value={selectedAddonType}
-            onChange={handleAddonTypeChange}
-            fullWidth
-            SelectProps={{
-              native: true,
-            }}
-          >
-            {addonTypes.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-          </TextField>
           <TextField
             autoFocus
             margin="dense"
@@ -221,12 +211,22 @@ export default () => {
             label="Add-on name"
             fullWidth
           />
+          <FormControlLabel
+            control={
+              <Switch
+                name="isServerless"
+                color="primary"
+              />
+            }
+            label={<Typography align='left'>Serverless?</Typography>}
+            labelPlacement="start"
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleAddonDialogClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleAddonCreate} color="primary">
+          <Button color="primary">
             Create
           </Button>
         </DialogActions>
@@ -238,6 +238,12 @@ export default () => {
               <Layer>
               {
                 mock.buildingBlocks.map((component, i) => {
+                    let componentLocation = PositionComponent(
+                      component, 
+                      window.innerWidth - 300, 
+                      componentWidth, 
+                      componentHeight);
+
                     return (
                       <Group 
                         name={component.id}
@@ -245,10 +251,10 @@ export default () => {
                         onClick={(e) => handleComponentClick(e, component)}>
                         <Rect
                           name={component.id}
-                          x={component.position.left}
-                          y={component.position.top}
+                          x={componentLocation.x}
+                          y={componentLocation.y}
                           width={componentWidth}
-                          height={50}
+                          height={componentHeight}
                           fill={component.isPrivate ? 'pink' : 'lightgreen'}
                           stroke={selectedComponent && selectedComponent.id === component.id ? 'black' : 'gray'}
                           strokeWidth={selectedComponent && selectedComponent.id === component.id ? 1.0 : 0.2}
@@ -259,8 +265,8 @@ export default () => {
                           align='center'
                           fontSize={16}
                           fontFamily='Calibri'
-                          x={component.position.left}
-                          y={component.position.top + 3}
+                          x={componentLocation.x}
+                          y={componentLocation.y + 3}
                           width={componentWidth}
                           >
                         </Text>
@@ -352,21 +358,17 @@ export default () => {
                       </Typography>
                       <Divider />
                       <List component="nav">
-                        <ListItem button dense>
-                          <ListItemIcon>
-                            <DescriptionIcon style={{fontSize: 16}} />
-                          </ListItemIcon>
-                          <ListItemText disableTypography primary={<Typography className={classes.info}>Cosmos Db</Typography>} />
-                        </ListItem>
-                        <ListItem button dense>
-                          <ListItemIcon>
-                            <LockIcon style={{fontSize: 16}} />
-                          </ListItemIcon>
-                          <ListItemText disableTypography primary={<Typography className={classes.info}>Key Vault</Typography>} />
-                        </ListItem>
-                        <ListItem button>
-                          <ListItemText disableTypography primary={<Typography className={classes.info}>More...</Typography>} />
-                        </ListItem>
+                        {
+                          addons.map((addon, i) => {
+                            return (
+                              <ListItem button dense onClick={(e, type) => handleAddonClick(e, addon.name)}>
+                                <ListItemIcon>
+                                  <DescriptionIcon style={{fontSize: 16}} />
+                                </ListItemIcon>
+                                <ListItemText disableTypography primary={<Typography className={classes.info}>{addon.label}</Typography>} />
+                              </ListItem>
+                            )})
+                        }
                       </List>
                     </Box>
                   </div>
