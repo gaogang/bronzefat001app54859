@@ -100,8 +100,7 @@ export default () => {
   const componentWidth = 150;
   const componentHeight = 50;
 
-  const mock = {
-      buildingBlocks: [
+  const buildingBlocks = [
         {
           key: '3c639eef-fb77-47fa-9176-3fd6f52f5430',
             id: 'bb 1',
@@ -141,8 +140,9 @@ export default () => {
               mode: 'auto'
           }
       },
-      ]
-  }
+      ];
+
+  const [components, setComponents] = React.useState(buildingBlocks);
 
   const handleNewBbClick = () => {
         alert('create new bb');
@@ -150,6 +150,7 @@ export default () => {
 
   const handleAddonClick = (e, type) => {
     if (type === 'Api') {
+      alert(buildingBlocks.length);
       setAddonDialogOpen(true);
     } else {
       alert('sorry, we are still under construction!!')
@@ -165,7 +166,21 @@ export default () => {
   }
 
   const createApiClick = (e) => {
+    setComponents(
+      buildingBlocks.concat([{
+              id: 'bb 4',
+              orderId: 1,
+              name: 'testApp',
+              type: 'app',
+              runtime: 'reactjs',
+              status: 'pending',
+              isPrivate: false,
+              position: {
+                  mode: 'auto'
+              }}])
+    );
 
+    setAddonDialogOpen(false);
   }
 
   return (
@@ -226,7 +241,7 @@ export default () => {
           <Button onClick={handleAddonDialogClose} color="primary">
             Cancel
           </Button>
-          <Button color="primary">
+          <Button onClick={createApiClick} color="primary">
             Create
           </Button>
         </DialogActions>
@@ -237,7 +252,7 @@ export default () => {
             <Stage width={window.innerWidth - 300 } height={window.innerHeight}>
               <Layer>
               {
-                mock.buildingBlocks.map((component, i) => {
+                components.map((component, i) => {
                     let componentLocation = PositionComponent(
                       component, 
                       window.innerWidth - 300, 
