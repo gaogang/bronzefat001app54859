@@ -1,16 +1,13 @@
 import React from 'react';
 
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import AddonApiDialog from '../dialogs/AddonApiDialog'
 import AppBar from '@material-ui/core/AppBar';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline';
 import DescriptionIcon from '@material-ui/icons/Description';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Divider from '@material-ui/core/Divider';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Grid from '@material-ui/core/Grid';
@@ -21,7 +18,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import PublishIcon from '@material-ui/icons/Publish';
 import Switch from '@material-ui/core/Switch';
 import grey from '@material-ui/core/colors/grey';
-import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -100,7 +96,8 @@ export default () => {
   const componentWidth = 150;
   const componentHeight = 50;
 
-  const buildingBlocks = [
+  const buildingBlocks = {
+    components: [
         {
           key: '3c639eef-fb77-47fa-9176-3fd6f52f5430',
             id: 'bb 1',
@@ -140,9 +137,9 @@ export default () => {
               mode: 'auto'
           }
       },
-      ];
+      ]};
 
-  const [components, setComponents] = React.useState(buildingBlocks);
+  const [components, setComponents] = React.useState(buildingBlocks.components);
 
   const handleNewBbClick = () => {
         alert('create new bb');
@@ -150,37 +147,39 @@ export default () => {
 
   const handleAddonClick = (e, type) => {
     if (type === 'Api') {
-      alert(buildingBlocks.length);
       setAddonDialogOpen(true);
     } else {
       alert('sorry, we are still under construction!!')
     }
   }
 
-  const handleAddonDialogClose = () => {
+  const handleAddonDialogClose = (metadata) => {
     setAddonDialogOpen(false);
-  }
 
-  const handleComponentClick = (e, component) => {
-    selectComponent(component);
-  }
+    if (!metadata) {
+      return;
+    }
 
-  const createApiClick = (e) => {
+    alert(JSON.stringify(metadata));
+
     setComponents(
-      buildingBlocks.concat([{
-              id: 'bb 4',
+      // Add Api
+      buildingBlocks.components.concat([{
+              id: metadata.id,
               orderId: 1,
-              name: 'testApp',
-              type: 'app',
-              runtime: 'reactjs',
+              name: metadata.name,
+              type: metadata.type,
+              runtime: metadata.runtime,
               status: 'pending',
               isPrivate: false,
               position: {
                   mode: 'auto'
               }}])
     );
+  }
 
-    setAddonDialogOpen(false);
+  const handleComponentClick = (e, component) => {
+    selectComponent(component);
   }
 
   return (
@@ -216,36 +215,7 @@ export default () => {
           </Button>
         </Toolbar>
       </AppBar>
-      <Dialog open={addonDialogOpen} onClose={handleAddonDialogClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">{selectedComponent ? selectedComponent.name : ''} add-on - Api</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Add-on name"
-            fullWidth
-          />
-          <FormControlLabel
-            control={
-              <Switch
-                name="isServerless"
-                color="primary"
-              />
-            }
-            label={<Typography align='left'>Serverless?</Typography>}
-            labelPlacement="start"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleAddonDialogClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={createApiClick} color="primary">
-            Create
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <AddonApiDialog open={addonDialogOpen} onClose={handleAddonDialogClose} />
       <main className={classes.content}>
         <div style={{width: '100%' }}>
           <Box display='flex' flexDirection='row'>
