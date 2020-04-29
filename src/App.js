@@ -1,6 +1,6 @@
 import React from 'react';
-import SolutionPage from './pages/solution';
-import SolutionListPage from './pages/solutionList';
+import SolutionPage from './pages/Solution';
+import SolutionListPage from './pages/SolutionList';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 

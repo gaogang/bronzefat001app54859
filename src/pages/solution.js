@@ -99,7 +99,6 @@ export default () => {
   const buildingBlocks = {
     components: [
         {
-          key: '3c639eef-fb77-47fa-9176-3fd6f52f5430',
             id: 'bb 1',
             orderId: 0,
             name: 'windermere',
@@ -110,33 +109,7 @@ export default () => {
             position: {
               mode: 'auto'
             }
-        },
-        {
-          key: '12e5a4da-1be6-4a77-a644-87eae218eb7b',
-            id: 'bb 2',
-            orderId: 1,
-            name: 'cosmos db',
-            type: 'db',
-            runtime: 'cosmosdb',
-            status: 'pending',
-            isPrivate: true,
-            position: {
-              mode: 'auto'
-            }
-        },
-        {
-          key: '74989886-609b-447c-8593-a06c8b95c932',
-          id: 'bb 3',
-          orderId: 0,
-          name: 'keyvault',
-          type: 'store',
-          runtime: 'keyvault',
-          status: 'pending',
-          isPrivate: true,
-          position: {
-              mode: 'auto'
-          }
-      },
+        }
       ]};
 
   const [components, setComponents] = React.useState(buildingBlocks.components);
