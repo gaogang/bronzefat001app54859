@@ -24,7 +24,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import { Stage, Layer, Group, Rect, Text, Arrow } from 'react-konva';
 
-import PositionComponent from '../utils/positionComponent'
+import PositionComponent from '../utils/PositionComponent'
 
 const useStyles = makeStyles((theme) => ({
   root: {
