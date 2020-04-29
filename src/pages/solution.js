@@ -24,6 +24,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import { Stage, Layer, Group, Rect, Text, Arrow } from 'react-konva';
 
+import OrderComponent from '../utils/OrderComponent'
 import PositionComponent from '../utils/PositionComponent'
 
 const useStyles = makeStyles((theme) => ({
@@ -133,21 +134,31 @@ export default () => {
       return;
     }
 
-    alert(JSON.stringify(metadata));
+    let component = {
+        id: metadata.id,
+        name: metadata.name,
+        type: metadata.type,
+        runtime: metadata.runtime,
+        status: 'pending',
+        isPrivate: false,
+        position: {
+            mode: 'auto'
+        }
+      };
+
+    let orderComponent = OrderComponent(buildingBlocks.components, component);
 
     setComponents(
       // Add Api
       buildingBlocks.components.concat([{
-              id: metadata.id,
-              orderId: 1,
-              name: metadata.name,
-              type: metadata.type,
-              runtime: metadata.runtime,
+              id: orderComponent.id,
+              orderId: orderComponent.orderId,
+              name: orderComponent.name,
+              type: orderComponent.type,
+              runtime: orderComponent.runtime,
               status: 'pending',
               isPrivate: false,
-              position: {
-                  mode: 'auto'
-              }}])
+              position: orderComponent.position}])
     );
   }
 
