@@ -24,7 +24,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import { Stage, Layer, Group, Rect, Text, Arrow } from 'react-konva';
 
-import OrderComponent from '../utils/OrderComponent'
+import OrderNewComponent from '../utils/OrderNewComponent'
 import PositionComponent from '../utils/PositionComponent'
 
 const useStyles = makeStyles((theme) => ({
@@ -107,7 +107,7 @@ export default () => {
             runtime: 'reactjs',
             status: 'pending',
             isPrivate: false,
-            position: {
+            display: {
               mode: 'auto'
             }
         }
@@ -137,28 +137,21 @@ export default () => {
     let component = {
         id: metadata.id,
         name: metadata.name,
+        order: OrderNewComponent(buildingBlocks.components, 'App'),
         type: metadata.type,
         runtime: metadata.runtime,
         status: 'pending',
         isPrivate: false,
-        position: {
-            mode: 'auto'
+        display: {
+            mode: 'auto',
+            width: componentWidth,
+            heigh: componentHeight
         }
       };
 
-    let orderComponent = OrderComponent(buildingBlocks.components, component);
-
     setComponents(
       // Add Api
-      buildingBlocks.components.concat([{
-              id: orderComponent.id,
-              orderId: orderComponent.orderId,
-              name: orderComponent.name,
-              type: orderComponent.type,
-              runtime: orderComponent.runtime,
-              status: 'pending',
-              isPrivate: false,
-              position: orderComponent.position}])
+      buildingBlocks.components.concat([component])
     );
   }
 
@@ -207,11 +200,28 @@ export default () => {
               <Layer>
               {
                 components.map((component, i) => {
+                  if (component.display.mode === 'auto') {
                     let componentLocation = PositionComponent(
                       component, 
                       window.innerWidth - 300, 
                       componentWidth, 
                       componentHeight);
+                    
+                    component.display.x = componentLocation.x;
+                    component.display.y = componentLocaiton.y;
+                  }
+                })
+              }
+              </Layer>
+              <Layer>
+              {
+                components.map((component, i) => {
+                  if (component.display.mode === 'auto') {
+                    let componentLocation = PositionComponent(component, window.innerWidth - 300);
+                    
+                    component.display.x = componentLocation.x;
+                    component.display.y = componentLocation.y;
+                  }
 
                     return (
                       <Group 
@@ -220,10 +230,10 @@ export default () => {
                         onClick={(e) => handleComponentClick(e, component)}>
                         <Rect
                           name={component.id}
-                          x={componentLocation.x}
-                          y={componentLocation.y}
-                          width={componentWidth}
-                          height={componentHeight}
+                          x={component.display.x}
+                          y={component.display.y}
+                          width={component.display.width}
+                          height={component.display.height}
                           fill={component.isPrivate ? 'pink' : 'lightgreen'}
                           stroke={selectedComponent && selectedComponent.id === component.id ? 'black' : 'gray'}
                           strokeWidth={selectedComponent && selectedComponent.id === component.id ? 1.0 : 0.2}
@@ -234,12 +244,13 @@ export default () => {
                           align='center'
                           fontSize={16}
                           fontFamily='Calibri'
-                          x={componentLocation.x}
-                          y={componentLocation.y + 3}
-                          width={componentWidth}
+                          x={component.display.x}
+                          y={component.display.y + 3}
+                          width={component.display.width}
                           >
                         </Text>
-                    </Group>);
+                    </Group>
+                  );
                 })
               }
               </Layer>

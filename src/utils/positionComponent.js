@@ -1,4 +1,4 @@
-export default (component, screenWidth, componentWidth, componentHeight) => {
+export default (component, screenWidth) => {
     const marginTop = 50;
     const numberOfSwimlanes = 3;
 
@@ -13,12 +13,12 @@ export default (component, screenWidth, componentWidth, componentHeight) => {
 
     let swimmingLaneWidth = screenWidth / numberOfSwimlanes;
 
-    if (component.position.mode === 'auto') {
-        x = componentTypes[component.type] * swimmingLaneWidth + (swimmingLaneWidth - componentWidth) / 2;
-        y = marginTop + component.orderId * (componentHeight + marginTop);
+    if (component.display.mode === 'auto') {
+        x = componentTypes[component.type] * swimmingLaneWidth + (swimmingLaneWidth - component.display.width) / 2;
+        y = marginTop + component.orderId * (component.display.height + marginTop);
     } else {
-        x = component.position.left;
-        y = component.position.top;
+        x = component.display.x;
+        y = component.display.y;
     }
 
     return {
