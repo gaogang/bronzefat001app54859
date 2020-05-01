@@ -26,6 +26,7 @@ import { Stage, Layer, Group, Rect, Text, Arrow } from 'react-konva';
 
 import OrderNewComponent from '../utils/OrderNewComponent'
 import PositionComponent from '../utils/PositionComponent'
+import ConnectComponents from '../utils/ConnectComponents';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -99,21 +100,57 @@ export default () => {
 
   const buildingBlocks = {
     components: [
-        {
-            id: 'bb 1',
-            orderId: 0,
-            name: 'windermere',
-            type: 'app',
-            runtime: 'reactjs',
-            status: 'pending',
-            isPrivate: false,
-            display: {
-              mode: 'auto'
-            }
+      {
+        id: 'bb 1',
+        order: 0,
+        name: 'windermere',
+        type: 'app',
+        runtime: 'reactjs',
+        status: 'pending',
+        isPrivate: false,
+        display: {
+          mode: 'auto'
         }
-      ]};
+      },
+      {
+        id: 'bb 2',
+        order: 1,
+        name: 'customer Api',
+        type: 'app',
+        runtime: 'node',
+        status: 'pending',
+        isPrivate: true,
+        display: {
+          mode: 'auto'
+        }
+      },
+      {
+        id: 'bb 3',
+        order: 0,
+        name: 'customer db',
+        type: 'db',
+        runtime: 'cosmos',
+        status: 'pending',
+        isPrivate: true,
+        display: {
+          mode: 'auto'
+        }
+      }
+    ],
+    connections: [
+      {
+        from: 'bb 1',
+        to: 'bb 2'
+      },
+      {
+        from: 'bb 2',
+        to: 'bb 3'
+      }
+    ]
+  };
 
   const [components, setComponents] = React.useState(buildingBlocks.components);
+  const [connections, setConnections] = React.useState(buildingBlocks.connections);
 
   const handleNewBbClick = () => {
         alert('create new bb');
@@ -137,7 +174,7 @@ export default () => {
     let component = {
         id: metadata.id,
         name: metadata.name,
-        order: OrderNewComponent(buildingBlocks.components, 'App'),
+        order: OrderNewComponent(components, 'app'),
         type: metadata.type,
         runtime: metadata.runtime,
         status: 'pending',
@@ -145,7 +182,7 @@ export default () => {
         display: {
             mode: 'auto',
             width: componentWidth,
-            heigh: componentHeight
+            height: componentHeight
         }
       };
 
@@ -158,6 +195,25 @@ export default () => {
   const handleComponentClick = (e, component) => {
     selectComponent(component);
   }
+
+  // Work out where the componets are
+  components.forEach(component=> {
+    if (!component.display.width) {
+      component.display.width = componentWidth;
+      component.display.height = componentHeight;
+    }
+
+    if (component.display.mode === 'auto') {
+      let componentLocation = PositionComponent(component, window.innerWidth - 300);
+
+      component.display.x = componentLocation.x;
+      component.display.y = componentLocation.y;
+    }
+  });
+
+  console.log('Creating connections...');
+  let connectionLines = ConnectComponents(connections, components);
+  console.log(`${connectionLines.length} connection(s) created`);
 
   return (
     <div className={classes.root}>
@@ -198,31 +254,22 @@ export default () => {
           <Box display='flex' flexDirection='row'>
             <Stage width={window.innerWidth - 300 } height={window.innerHeight}>
               <Layer>
-              {
-                components.map((component, i) => {
-                  if (component.display.mode === 'auto') {
-                    let componentLocation = PositionComponent(
-                      component, 
-                      window.innerWidth - 300, 
-                      componentWidth, 
-                      componentHeight);
-                    
-                    component.display.x = componentLocation.x;
-                    component.display.y = componentLocaiton.y;
-                  }
-                })
-              }
+                {
+                  connectionLines.map((connectionLine, i) => {
+                    return (
+                      <Arrow
+                        points={[connectionLine.from.x, connectionLine.from.y, connectionLine.to.x, connectionLine.to.y]}
+                        pointerWidth={7}
+                        fill='gray'
+                        stroke='gray'
+                        strokeWidth={0.6} />
+                    );
+                  })
+                }
               </Layer>
               <Layer>
               {
                 components.map((component, i) => {
-                  if (component.display.mode === 'auto') {
-                    let componentLocation = PositionComponent(component, window.innerWidth - 300);
-                    
-                    component.display.x = componentLocation.x;
-                    component.display.y = componentLocation.y;
-                  }
-
                     return (
                       <Group 
                         name={component.id}
@@ -247,8 +294,7 @@ export default () => {
                           x={component.display.x}
                           y={component.display.y + 3}
                           width={component.display.width}
-                          >
-                        </Text>
+                          />
                     </Group>
                   );
                 })

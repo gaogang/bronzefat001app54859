@@ -1,9 +1,3 @@
 export default (componentId, components) => {
-    components.forEach(component => {
-        if (Component.id === componentId) {
-            return component;
-        }
-    });
-
-    return null;
+    return components.find(component => component.id === componentId);
 }

@@ -2,7 +2,7 @@ import FindComponent from './FindComponent'
 
 export default (connections, components) => {
     let connectionLines = [];
-    let connectors = initConnectors(components)
+    let connectors = [];
 
     if (!connections) {
         return [];
@@ -16,16 +16,29 @@ export default (connections, components) => {
         let to = FindComponent(connection.to, components);
         let from = FindComponent(connection.from, components);
 
-        if (from.position.x < to.position.x) {
+        console.log(`From: (x - ${from.display.x} y - ${from.display.y}), To: (x - ${to.display.x} y - ${to.display.y})`);
+
+        if (!connectors[to.id]) {
+            connectors[to.id] = {
+                left: [],
+                right: [],
+                top: [],
+                bottom: []
+            }
+        }
+
+        if (from.display.x < to.display.x) {
             connectors[to.id].left.push(from);
-        } else if(from.position.x > to.position.x) {
-            connectors[to.id].left.push(from);
+        } else if(from.display.x > to.display.x) {
+            connectors[to.id].right.push(from);
         }
         else {
-            if (from.y < to.y) {
+            if (from.display.y < to.display.y) {
+                console.log(`Adding a top connector to ${to.name}`)
                 connectors[to.id].top.push(from);
             } else 
             {
+                console.log(`Adding a bottom connector to ${to.name}`)
                 connectors[to.id].bottom.push(from);
             }
         }
@@ -35,90 +48,65 @@ export default (connections, components) => {
         let connector = connectors[component.id];
 
         if (!connector) {
-            continue;
+            return;
         } 
 
-        let counter = 1;
-        connector.left.sort(compareY).forEach(from => {
-            let connectionLine = {
-                from: {
-                    x: from.position.x,
-                    y: from.position.y
-                },
-
-                to: {
-                    x: to.position.x,
-                    y: to.position.y + counter * (to.height / (connector.left.length + 2))
-                }
-            }
-            connectionLines.push(connectionLine);
-        });
-
-        counter = 1;
-        connector.right.sort(compareY).forEach(from => {
-            let connectionLine = {
-                from: {
-                    x: from.position.x,
-                    y: from.position.y
-                },
-
-                to: {
-                    x: to.position.x,
-                    y: to.position.y + counter * (to.height / (connector.right.length + 2))
-                }
-            }
-            connectionLines.push(connectionLine);
-        });
-
-        counter = 1;
-        connector.top.sort(compareX).forEach(from => {
-            let connectionLine = {
-                from: {
-                    x: from.position.x,
-                    y: from.position.y
-                },
-
-                to: {
-                    x: to.position.x + counter * (to.width / (connector.top.length + 2)),
-                    y: to.position.y
-                }
-            }
-            connectionLines.push(connectionLine);
-        });
-
-        counter = 1;
-        connector.bottom.sort(compareX).forEach(from => {
-            let connectionLine = {
-                from: {
-                    x: from.position.x,
-                    y: from.position.y
-                },
-
-                to: {
-                    x: to.position.x + counter * (to.width / (connector.bottom.length + 2)),
-                    y: to.position.y
-                }
-            }
-            connectionLines.push(connectionLine);
-        });
+        connectionLines = connectionLines.concat(createConnectionLines(connector.left, component, 'left'));
+        connectionLines = connectionLines.concat(createConnectionLines(connector.right, component, 'right'));
+        connectionLines = connectionLines.concat(createConnectionLines(connector.top, component, 'top'));
+        connectionLines = connectionLines.concat(createConnectionLines(connector.bottom, component, 'bottom'));
     });
 
     return connectionLines;
 }
 
-function initConnectors(components) {
-    let connectors;
+function createConnectionLines(sources, target, side) {
+    console.log(`side - ${side}, number of connectors - ${sources.length}, target - ${target.name}`);
+    let connectionLines = [];
+    let counter = 1;
+    
+    let sortingFunc;
 
-    components.forEach(component => {
-        connectors[component.id] = {
-            left: [],
-            right: [],
-            top: [],
-            bottom: []
-        }    
+    if (side === 'top' || side === 'bottom') {
+        sortingFunc = compareX;
+    } else if(side === 'left' || side === 'right') {
+        sortingFunc = compareY;
+    }
+
+    sources.sort(sortingFunc).forEach(source => {
+        let x = 0;
+        let y = 0;
+
+        if (side === 'top') {
+            x = target.display.x + counter * (target.display.width / (sources.length + 1));
+            y = target.display.y;
+        } else if(side === 'bottom') {
+            x = target.display.x + counter * (target.display.width / (source.length + 1));
+            y = target.display.y + target.display.height;
+        } else if(side === 'left') {
+            x = target.display.x;
+            y = target.display.y + counter * (target.display.height / (sources.length + 1));
+        } else if(side === 'right') {
+            x = target.display.x + target.display.width;
+            y = target.display.y + counter * (target.display.height / (sources.length + 1));
+        }
+
+        let connectionLine = {
+            from: {
+                x: source.display.x + source.display.width / 2,
+                y: source.display.y + source.display.height / 2
+            },
+
+            to: {
+                x: x,
+                y: y
+            }
+        }
+        counter++;
+        connectionLines.push(connectionLine);
     });
 
-    return connectors; 
+    return connectionLines;
 }
 
 function compareY(a, b) {
