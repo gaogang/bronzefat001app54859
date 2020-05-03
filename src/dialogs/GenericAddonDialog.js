@@ -41,7 +41,7 @@ export default (props) => {
             <DialogTitle id="addon=api">Add-on</DialogTitle>
             <DialogContent>
                 <Typography className={classes.info} color="textSecondary" align='center'>
-                   {addon.label}
+                   {!addon ? '' : addon.label}
                 </Typography>
             </DialogContent>
             <DialogActions>

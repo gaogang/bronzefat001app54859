@@ -1,0 +1,104 @@
+import React from 'react';
+import Box from '@material-ui/core/Box';
+import DescriptionIcon from '@material-ui/icons/Description';
+import Divider from '@material-ui/core/Divider';
+import GenericAddonDialog from '../dialogs/GenericAddonDialog';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+
+const addons = [
+    {
+      name: 'Api',
+      label: 'Api',
+      type: 'app',
+      runtime: 'node'
+    },
+    {
+      name: 'cosmosdb',
+      label: 'Cosmos DB',
+      type: 'db',
+      runtime: 'SQL'
+    }
+];
+
+const useStyles = makeStyles((theme) => ({
+    info: {
+        fontFamily: 'calibri',
+        fontSize: 14
+      },
+    
+      title: {
+        flexGrow: 1,
+        fontFamily: 'calibri',
+        fontSize: 16
+      }
+}));
+
+export default (props) => {
+    const classes = useStyles();
+    
+    const {onCreate} = props;
+
+    const [addon, setAddon] = React.useState(null);
+    const [addonDialogOpen, setAddonDialogOpen] = React.useState(false);
+
+    const handleAddonClick = (e, type) => {
+        setAddon(type);
+        setAddonDialogOpen(true);
+    }
+
+    const handleAddonCreate = (addon) => {
+        setAddonDialogOpen(false);
+    
+        if (!addon) {
+          return;
+        }
+
+        onCreate({
+            id: addon.id, 
+            name: addon.name,
+            type: addon.type,
+            runtime: addon.runtime,
+            status: 'pending',
+            isPrivate: false
+        });
+      }
+    
+      const handleAddonDialogClose = () => {
+        setAddonDialogOpen(false);
+      }
+
+    return (
+        <div>
+            <GenericAddonDialog 
+                addon={addon} 
+                open={addonDialogOpen} 
+                onClose={handleAddonDialogClose} 
+                onCreate={handleAddonCreate}
+                />
+            <Box style={{marginTop: 20}}>
+                <Typography className={classes.info} align='left'>
+                Add-ons
+                </Typography>
+                <Divider />
+                <List component="nav">
+                {
+                    addons.map((addon, i) => {
+                    return (
+                        <ListItem button dense onClick={(e, type) => handleAddonClick(e, addon)}>
+                        <ListItemIcon>
+                            <DescriptionIcon style={{fontSize: 16}} />
+                        </ListItemIcon>
+                        <ListItemText disableTypography primary={<Typography className={classes.info}>{addon.label}</Typography>} />
+                        </ListItem>
+                    )})
+                }
+                </List>
+            </Box>
+        </div>
+    );
+}

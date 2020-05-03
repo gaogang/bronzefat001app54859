@@ -1,19 +1,13 @@
 import React from 'react';
 
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import AddonPane from '../components/AddonPane'
 import AppBar from '@material-ui/core/AppBar';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button'
-import ComponentProperties from '../components/ComponentProperties'
+import ComponentPropertyPane from '../components/ComponentPropertyPane'
 import CssBaseline from '@material-ui/core/CssBaseline';
-import DescriptionIcon from '@material-ui/icons/Description';
-import Divider from '@material-ui/core/Divider';
-import GenericAddonDialog from '../dialogs/GenericAddonDialog';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 import PublishIcon from '@material-ui/icons/Publish';
 import grey from '@material-ui/core/colors/grey';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -70,24 +64,8 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const addons = [
-    {
-      name: 'Api',
-      label: 'Api',
-      type: 'app',
-      runtime: 'node'
-    },
-    {
-      name: 'cosmosdb',
-      label: 'Cosmos DB',
-      type: 'db',
-      runtime: 'SQL'
-    }
-  ];
-
 export default () => {
   const classes = useStyles();
-  const [addonDialogOpen, setAddonDialogOpen] = React.useState(false);
   const [selectedComponent, selectComponent] = React.useState(null);
 
   const componentWidth = 150;
@@ -146,51 +124,35 @@ export default () => {
 
   const [components, setComponents] = React.useState(buildingBlocks.components);
   const [connections, setConnections] = React.useState(buildingBlocks.connections);
-  const [addon, setAddon] = React.useState('');
 
   const handleNewBbClick = () => {
         alert('create new bb');
   }
 
-  const handleAddonClick = (e, type) => {
-    setAddon(type);
-    setAddonDialogOpen(true);
+  const handleComponentClick = (e, component) => {
+    selectComponent(component);
   }
 
   const handleAddonCreate = (addon) => {
-    setAddonDialogOpen(false);
-
-    if (!addon) {
-      return;
-    }
-
     let component = {
-        id: addon.id,
-        name: addon.name,
-        order: OrderNewComponent(components, addon.type),
-        type: addon.type,
-        runtime: addon.runtime,
-        status: 'pending',
-        isPrivate: false,
-        display: {
-            mode: 'auto',
-            width: componentWidth,
-            height: componentHeight
-        }
-      };
+      id: addon.id,
+      name: addon.name,
+      order: OrderNewComponent(components, addon.type),
+      type: addon.type,
+      runtime: addon.runtime,
+      status: 'pending',
+      isPrivate: false,
+      display: {
+          mode: 'auto',
+          width: componentWidth,
+          height: componentHeight
+      }
+    };
 
     setComponents(
       // Add Api
       components.concat([component])
     );
-  }
-
-  const handleAddonDialogClose = () => {
-    setAddonDialogOpen(false);
-  }
-
-  const handleComponentClick = (e, component) => {
-    selectComponent(component);
   }
 
   // Work out where the componets are
@@ -245,7 +207,7 @@ export default () => {
           </Button>
         </Toolbar>
       </AppBar>
-      <GenericAddonDialog addon={addon} open={addonDialogOpen} onClose={handleAddonDialogClose} onCreate={handleAddonCreate}/>
+      
       <main className={classes.content}>
         <div style={{width: '100%' }}>
           <Box display='flex' flexDirection='row'>
@@ -301,26 +263,8 @@ export default () => {
             <Box className={classes.sidebar}>
               { selectedComponent
                 ? <div>
-                    <ComponentProperties selectedComponent={selectedComponent} />
-                    <Box style={{marginTop: 20}}>
-                      <Typography className={classes.info} align='left'>
-                        Add-ons
-                      </Typography>
-                      <Divider />
-                      <List component="nav">
-                        {
-                          addons.map((addon, i) => {
-                            return (
-                              <ListItem button dense onClick={(e, type) => handleAddonClick(e, addon)}>
-                                <ListItemIcon>
-                                  <DescriptionIcon style={{fontSize: 16}} />
-                                </ListItemIcon>
-                                <ListItemText disableTypography primary={<Typography className={classes.info}>{addon.label}</Typography>} />
-                              </ListItem>
-                            )})
-                        }
-                      </List>
-                    </Box>
+                    <ComponentPropertyPane selectedComponent={selectedComponent} />
+                    <AddonPane onCreate={handleAddonCreate}/>
                   </div>
                 : <Typography className={classes.title} variant="h5" component="h2" align='center'>
                     Select a component...
