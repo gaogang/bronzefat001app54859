@@ -6,6 +6,7 @@ import AppBar from '@material-ui/core/AppBar';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button'
+import CanvasPane from '../components/CanvasPane'
 import ComponentPropertyPane from '../components/ComponentPropertyPane'
 import CssBaseline from '@material-ui/core/CssBaseline';
 import PublishIcon from '@material-ui/icons/Publish';
@@ -14,9 +15,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { Stage, Layer, Group, Rect, Text, Arrow } from 'react-konva';
-
-import ConnectComponents from '../utils/ConnectComponents';
 import OrderNewComponent from '../utils/OrderNewComponent'
 import PositionComponent from '../utils/PositionComponent'
 
@@ -65,12 +63,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default () => {
-  const classes = useStyles();
-  const [selectedComponent, selectComponent] = React.useState(null);
-
-  const componentWidth = 150;
-  const componentHeight = 50;
-
   const buildingBlocks = {
     components: [
       {
@@ -121,15 +113,20 @@ export default () => {
       }
     ]
   };
-
+  
+  const classes = useStyles();
   const [components, setComponents] = React.useState(buildingBlocks.components);
   const [connections, setConnections] = React.useState(buildingBlocks.connections);
+  const [selectedComponent, selectComponent] = React.useState(null);
+
+  const componentWidth = 150;
+  const componentHeight = 50;
 
   const handleNewBbClick = () => {
         alert('create new bb');
   }
 
-  const handleComponentClick = (e, component) => {
+  const handleComponentClick = (component) => {
     selectComponent(component);
   }
 
@@ -170,10 +167,6 @@ export default () => {
     }
   });
 
-  console.log('Creating connections...');
-  let connectionLines = ConnectComponents(connections, components);
-  console.log(`${connectionLines.length} connection(s) created`);
-
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -211,55 +204,11 @@ export default () => {
       <main className={classes.content}>
         <div style={{width: '100%' }}>
           <Box display='flex' flexDirection='row'>
-            <Stage width={window.innerWidth - 300 } height={window.innerHeight}>
-              <Layer>
-                {
-                  connectionLines.map((connectionLine, i) => {
-                    return (
-                      <Arrow
-                        points={[connectionLine.from.x, connectionLine.from.y, connectionLine.to.x, connectionLine.to.y]}
-                        pointerWidth={7}
-                        fill='gray'
-                        stroke='gray'
-                        strokeWidth={0.6} />
-                    );
-                  })
-                }
-              </Layer>
-              <Layer>
-              {
-                components.map((component, i) => {
-                    return (
-                      <Group 
-                        name={component.id}
-                        draggable={true}
-                        onClick={(e) => handleComponentClick(e, component)}>
-                        <Rect
-                          name={component.id}
-                          x={component.display.x}
-                          y={component.display.y}
-                          width={component.display.width}
-                          height={component.display.height}
-                          fill={component.isPrivate ? 'pink' : 'lightgreen'}
-                          stroke={selectedComponent && selectedComponent.id === component.id ? 'black' : 'gray'}
-                          strokeWidth={selectedComponent && selectedComponent.id === component.id ? 1.0 : 0.2}
-                        />
-                        <Text 
-                          name={component.id}
-                          text={component.name}
-                          align='center'
-                          fontSize={16}
-                          fontFamily='Calibri'
-                          x={component.display.x}
-                          y={component.display.y + 3}
-                          width={component.display.width}
-                          />
-                    </Group>
-                  );
-                })
-              }
-              </Layer>
-            </Stage>
+            <CanvasPane 
+              components={components} 
+              connections={connections}
+              selectedComponent={selectedComponent}
+              onClickComponent={handleComponentClick} />
             <Box className={classes.sidebar}>
               { selectedComponent
                 ? <div>
