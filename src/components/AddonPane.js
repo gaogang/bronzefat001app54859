@@ -14,7 +14,7 @@ const addons = [
     {
       name: 'Api',
       label: 'Api',
-      type: 'app',
+      type: 'service',
       runtime: 'node'
     },
     {

@@ -4,7 +4,7 @@ export default (component, screenWidth) => {
 
     const componentTypes = {
         app: 0, 
-        store: 1,
+        service: 1,
         db: 2
     }
     

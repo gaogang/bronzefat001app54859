@@ -62,6 +62,8 @@ export default (connections, components) => {
 
 function createConnectionLines(sources, target, side) {
     console.log(`side - ${side}, number of connectors - ${sources.length}, target - ${target.name}`);
+    const i = 50;
+
     let connectionLines = [];
     let counter = 1;
     
@@ -76,31 +78,41 @@ function createConnectionLines(sources, target, side) {
     sources.sort(sortingFunc).forEach(source => {
         let x = 0;
         let y = 0;
+        let ix = 0;
+        let iy = 0;
 
         if (side === 'top') {
             x = target.display.x + counter * (target.display.width / (sources.length + 1));
             y = target.display.y;
+
+            ix = x;
+            iy = y - i;
         } else if(side === 'bottom') {
             x = target.display.x + counter * (target.display.width / (source.length + 1));
             y = target.display.y + target.display.height;
+
+            ix = x;
+            iy = y + i;
         } else if(side === 'left') {
             x = target.display.x;
             y = target.display.y + counter * (target.display.height / (sources.length + 1));
+
+            ix = x - i;
+            iy = y;
         } else if(side === 'right') {
             x = target.display.x + target.display.width;
             y = target.display.y + counter * (target.display.height / (sources.length + 1));
+
+            ix = x + i;
+            iy = y;
         }
 
         let connectionLine = {
-            from: {
-                x: source.display.x + source.display.width / 2,
-                y: source.display.y + source.display.height / 2
-            },
-
-            to: {
-                x: x,
-                y: y
-            }
+            from: source,
+            to: target,
+            connectors: [
+                source.display.x + source.display.width / 2, source.display.y + source.display.height / 2, ix, iy, x, y
+            ]
         }
         counter++;
         connectionLines.push(connectionLine);

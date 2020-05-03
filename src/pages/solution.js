@@ -76,42 +76,9 @@ export default () => {
         display: {
           mode: 'auto'
         }
-      },
-      {
-        id: 'bb 2',
-        order: 1,
-        name: 'customer Api',
-        type: 'app',
-        runtime: 'node',
-        status: 'pending',
-        isPrivate: true,
-        display: {
-          mode: 'auto'
-        }
-      },
-      {
-        id: 'bb 3',
-        order: 0,
-        name: 'customer db',
-        type: 'db',
-        runtime: 'cosmos',
-        status: 'pending',
-        isPrivate: true,
-        display: {
-          mode: 'auto'
-        }
       }
     ],
-    connections: [
-      {
-        from: 'bb 1',
-        to: 'bb 2'
-      },
-      {
-        from: 'bb 2',
-        to: 'bb 3'
-      }
-    ]
+    connections: []
   };
 
   const classes = useStyles();
@@ -147,7 +114,6 @@ export default () => {
     };
 
     setComponents(
-      // Add Api
       components.concat([addonComponent])
     );
 
@@ -157,7 +123,6 @@ export default () => {
     };
 
     setConnections(
-      // Add Api
       connections.concat([connection])
     );
   }

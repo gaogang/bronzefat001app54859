@@ -22,7 +22,7 @@ export default (props) => {
                 connectionLines.map((connectionLine, i) => {
                 return (
                     <Arrow
-                    points={[connectionLine.from.x, connectionLine.from.y, connectionLine.to.x, connectionLine.to.y]}
+                    points={connectionLine.connectors}
                     pointerWidth={7}
                     fill='gray'
                     stroke='gray'
