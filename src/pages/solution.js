@@ -5,18 +5,16 @@ import AppBar from '@material-ui/core/AppBar';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button'
+import ComponentProperties from '../components/ComponentProperties'
 import CssBaseline from '@material-ui/core/CssBaseline';
 import DescriptionIcon from '@material-ui/icons/Description';
 import Divider from '@material-ui/core/Divider';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import GenericAddonDialog from '../dialogs/GenericAddonDialog';
-import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import PublishIcon from '@material-ui/icons/Publish';
-import Switch from '@material-ui/core/Switch';
 import grey from '@material-ui/core/colors/grey';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -303,80 +301,7 @@ export default () => {
             <Box className={classes.sidebar}>
               { selectedComponent
                 ? <div>
-                    <Typography className={classes.title} align='center'>
-                      {selectedComponent.name}
-                    </Typography>
-                    <Typography className={classes.info} color="textSecondary" align='center'>
-                      ({selectedComponent.type})
-                    </Typography>
-                    <Divider />
-                    <Box style={{marginTop: 20}}>
-                      <Grid container spacing={1}>
-                        <Grid item xs={4}>
-                          <Typography className={classes.info}>
-                            Status:
-                          </Typography>
-                        </Grid>
-                        <Grid item xs>
-                          <Typography className={classes.info}>
-                            {selectedComponent.status}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                      <Grid container spacing={1}>
-                        <Grid item xs={4}>
-                          <Typography className={classes.info}>
-                            Runtime:
-                          </Typography>
-                        </Grid>
-                        <Grid item xs>
-                          <Typography className={classes.info}>
-                            {selectedComponent.runtime}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                      <Grid container spacing={1}>
-                        <Grid item xs={4}>
-                          <Typography className={classes.info}>
-                            Resource group:
-                          </Typography>
-                        </Grid>
-                        <Grid item xs>
-                          <Typography className={classes.info}>
-                            {selectedComponent.resourceGroup}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                      <Grid container spacing={1}>
-                        <Grid item xs={4}>
-                          <Typography className={classes.info}>
-                            Subscription:
-                          </Typography>
-                        </Grid>
-                        <Grid item xs>
-                          <Typography className={classes.info}>
-                            {selectedComponent.subscription}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Box>
-                    <Box style={{marginTop: 20}}>
-                      <Typography className={classes.info} align='left'>
-                        Network security
-                      </Typography>
-                      <Divider />
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            name="isPrivate"
-                            color="primary"
-                            checked={selectedComponent.isPrivate}
-                          />
-                        }
-                        label={<Typography className={classes.info} align='left'>Internet facing:</Typography>}
-                        labelPlacement="start"
-                      />
-                    </Box>
+                    <ComponentProperties selectedComponent={selectedComponent} />
                     <Box style={{marginTop: 20}}>
                       <Typography className={classes.info} align='left'>
                         Add-ons
