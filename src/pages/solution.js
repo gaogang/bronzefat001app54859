@@ -113,7 +113,7 @@ export default () => {
       }
     ]
   };
-  
+
   const classes = useStyles();
   const [components, setComponents] = React.useState(buildingBlocks.components);
   const [connections, setConnections] = React.useState(buildingBlocks.connections);
@@ -130,15 +130,15 @@ export default () => {
     selectComponent(component);
   }
 
-  const handleAddonCreate = (addon) => {
-    let component = {
-      id: addon.id,
-      name: addon.name,
-      order: OrderNewComponent(components, addon.type),
-      type: addon.type,
-      runtime: addon.runtime,
-      status: 'pending',
-      isPrivate: false,
+  const handleAddonCreate = (metadata) => {
+    let addonComponent = {
+      id: metadata.addon.id,
+      name: metadata.addon.name,
+      order: OrderNewComponent(components, metadata.addon.type),
+      type: metadata.addon.type,
+      runtime: metadata.addon.runtime,
+      status: metadata.addon.status,
+      isPrivate: metadata.addon.isPrivate,
       display: {
           mode: 'auto',
           width: componentWidth,
@@ -148,7 +148,17 @@ export default () => {
 
     setComponents(
       // Add Api
-      components.concat([component])
+      components.concat([addonComponent])
+    );
+
+    let connection = {
+        from: metadata.component.id,
+        to: metadata.addon.id
+    };
+
+    setConnections(
+      // Add Api
+      connections.concat([connection])
     );
   }
 
@@ -200,7 +210,6 @@ export default () => {
           </Button>
         </Toolbar>
       </AppBar>
-      
       <main className={classes.content}>
         <div style={{width: '100%' }}>
           <Box display='flex' flexDirection='row'>
@@ -213,9 +222,9 @@ export default () => {
               { selectedComponent
                 ? <div>
                     <ComponentPropertyPane selectedComponent={selectedComponent} />
-                    <AddonPane onCreate={handleAddonCreate}/>
+                    <AddonPane component={selectedComponent} onCreate={handleAddonCreate}/>
                   </div>
-                : <Typography className={classes.title} variant="h5" component="h2" align='center'>
+                : <Typography className={classes.title} align='center'>
                     Select a component...
                   </Typography>
               }

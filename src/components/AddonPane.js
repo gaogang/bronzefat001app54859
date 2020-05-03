@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 export default (props) => {
     const classes = useStyles();
     
-    const {onCreate} = props;
+    const {component, onCreate} = props;
 
     const [addon, setAddon] = React.useState(null);
     const [addonDialogOpen, setAddonDialogOpen] = React.useState(false);
@@ -59,12 +59,15 @@ export default (props) => {
         }
 
         onCreate({
+          component: component,
+          addon: {
             id: addon.id, 
             name: addon.name,
             type: addon.type,
             runtime: addon.runtime,
             status: 'pending',
             isPrivate: false
+          }
         });
       }
     
@@ -82,7 +85,7 @@ export default (props) => {
                 />
             <Box style={{marginTop: 20}}>
                 <Typography className={classes.info} align='left'>
-                Add-ons
+                  Add-ons
                 </Typography>
                 <Divider />
                 <List component="nav">
