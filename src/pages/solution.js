@@ -1,7 +1,6 @@
 import React from 'react';
 
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import AddonApiDialog from '../dialogs/AddonApiDialog'
 import AppBar from '@material-ui/core/AppBar';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import Box from '@material-ui/core/Box';
@@ -10,6 +9,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import DescriptionIcon from '@material-ui/icons/Description';
 import Divider from '@material-ui/core/Divider';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import GenericAddonDialog from '../dialogs/GenericAddonDialog';
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -24,9 +24,9 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import { Stage, Layer, Group, Rect, Text, Arrow } from 'react-konva';
 
+import ConnectComponents from '../utils/ConnectComponents';
 import OrderNewComponent from '../utils/OrderNewComponent'
 import PositionComponent from '../utils/PositionComponent'
-import ConnectComponents from '../utils/ConnectComponents';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   info: {
-    fontFamily: 'Roboto',
+    fontFamily: 'calibri',
     fontSize: 14
   },
 
@@ -67,26 +67,23 @@ const useStyles = makeStyles((theme) => ({
 
   title: {
     flexGrow: 1,
-    fontFamily: 'Roboto'
+    fontFamily: 'calibri',
+    fontSize: 16
   }
 }));
 
 const addons = [
     {
       name: 'Api',
-      label: 'Api'
+      label: 'Api',
+      type: 'app',
+      runtime: 'node'
     },
     {
       name: 'cosmosdb',
       label: 'Cosmos DB',
-    },
-    {
-      name: 'keyvault',
-      label: 'Key Vault'
-    },
-    {
-      name: 'sfconnect',
-      label: 'Salesforce Connect'
+      type: 'db',
+      runtime: 'SQL'
     }
   ];
 
@@ -151,32 +148,30 @@ export default () => {
 
   const [components, setComponents] = React.useState(buildingBlocks.components);
   const [connections, setConnections] = React.useState(buildingBlocks.connections);
+  const [addon, setAddon] = React.useState('');
 
   const handleNewBbClick = () => {
         alert('create new bb');
   }
 
   const handleAddonClick = (e, type) => {
-    if (type === 'Api') {
-      setAddonDialogOpen(true);
-    } else {
-      alert('sorry, we are still under construction!!')
-    }
+    setAddon(type);
+    setAddonDialogOpen(true);
   }
 
-  const handleAddonDialogClose = (metadata) => {
+  const handleAddonCreate = (addon) => {
     setAddonDialogOpen(false);
 
-    if (!metadata) {
+    if (!addon) {
       return;
     }
 
     let component = {
-        id: metadata.id,
-        name: metadata.name,
-        order: OrderNewComponent(components, 'app'),
-        type: metadata.type,
-        runtime: metadata.runtime,
+        id: addon.id,
+        name: addon.name,
+        order: OrderNewComponent(components, addon.type),
+        type: addon.type,
+        runtime: addon.runtime,
         status: 'pending',
         isPrivate: false,
         display: {
@@ -188,8 +183,12 @@ export default () => {
 
     setComponents(
       // Add Api
-      buildingBlocks.components.concat([component])
+      components.concat([component])
     );
+  }
+
+  const handleAddonDialogClose = () => {
+    setAddonDialogOpen(false);
   }
 
   const handleComponentClick = (e, component) => {
@@ -248,7 +247,7 @@ export default () => {
           </Button>
         </Toolbar>
       </AppBar>
-      <AddonApiDialog open={addonDialogOpen} onClose={handleAddonDialogClose} />
+      <GenericAddonDialog addon={addon} open={addonDialogOpen} onClose={handleAddonDialogClose} onCreate={handleAddonCreate}/>
       <main className={classes.content}>
         <div style={{width: '100%' }}>
           <Box display='flex' flexDirection='row'>
@@ -304,7 +303,7 @@ export default () => {
             <Box className={classes.sidebar}>
               { selectedComponent
                 ? <div>
-                    <Typography className={classes.title} variant="h5" component="h2" align='center'>
+                    <Typography className={classes.title} align='center'>
                       {selectedComponent.name}
                     </Typography>
                     <Typography className={classes.info} color="textSecondary" align='center'>
@@ -313,7 +312,7 @@ export default () => {
                     <Divider />
                     <Box style={{marginTop: 20}}>
                       <Grid container spacing={1}>
-                        <Grid item xs={3}>
+                        <Grid item xs={4}>
                           <Typography className={classes.info}>
                             Status:
                           </Typography>
@@ -324,8 +323,8 @@ export default () => {
                           </Typography>
                         </Grid>
                       </Grid>
-                      <Grid container spacing={2}>
-                        <Grid item xs={3}>
+                      <Grid container spacing={1}>
+                        <Grid item xs={4}>
                           <Typography className={classes.info}>
                             Runtime:
                           </Typography>
@@ -336,8 +335,8 @@ export default () => {
                           </Typography>
                         </Grid>
                       </Grid>
-                      <Grid container spacing={2}>
-                        <Grid item xs={3}>
+                      <Grid container spacing={1}>
+                        <Grid item xs={4}>
                           <Typography className={classes.info}>
                             Resource group:
                           </Typography>
@@ -348,8 +347,8 @@ export default () => {
                           </Typography>
                         </Grid>
                       </Grid>
-                      <Grid container spacing={2}>
-                        <Grid item xs={3}>
+                      <Grid container spacing={1}>
+                        <Grid item xs={4}>
                           <Typography className={classes.info}>
                             Subscription:
                           </Typography>
@@ -387,7 +386,7 @@ export default () => {
                         {
                           addons.map((addon, i) => {
                             return (
-                              <ListItem button dense onClick={(e, type) => handleAddonClick(e, addon.name)}>
+                              <ListItem button dense onClick={(e, type) => handleAddonClick(e, addon)}>
                                 <ListItemIcon>
                                   <DescriptionIcon style={{fontSize: 16}} />
                                 </ListItemIcon>
