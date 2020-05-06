@@ -76,10 +76,7 @@ function createConnectionLines(sources, target, side) {
     }
 
     sources.sort(sortingFunc).forEach(source => {
-        let x = 0;
-        let y = 0;
-        let ix = 0;
-        let iy = 0;
+        let x = 0, y = 0, ix = 0, iy = 0;
 
         if (side === 'top') {
             x = target.display.x + counter * (target.display.width / (sources.length + 1));

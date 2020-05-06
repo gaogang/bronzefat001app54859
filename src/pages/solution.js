@@ -73,6 +73,7 @@ export default () => {
         runtime: 'reactjs',
         status: 'pending',
         isPrivate: false,
+        resource: 'AppServices',
         display: {
           mode: 'auto'
         }
@@ -86,7 +87,7 @@ export default () => {
   const [connections, setConnections] = React.useState(buildingBlocks.connections);
   const [selectedComponent, selectComponent] = React.useState(null);
 
-  const componentWidth = 150;
+  const componentWidth = 180;
   const componentHeight = 50;
 
   const handleNewBbClick = () => {
@@ -106,6 +107,7 @@ export default () => {
       runtime: metadata.addon.runtime,
       status: metadata.addon.status,
       isPrivate: metadata.addon.isPrivate,
+      resource: metadata.addon.resource,
       display: {
           mode: 'auto',
           width: componentWidth,

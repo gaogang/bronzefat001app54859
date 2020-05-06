@@ -15,13 +15,15 @@ const addons = [
       name: 'Api',
       label: 'Api',
       type: 'service',
-      runtime: 'node'
+      runtime: 'node',
+      resource: 'Function'
     },
     {
       name: 'cosmosdb',
       label: 'Cosmos DB',
       type: 'db',
-      runtime: 'SQL'
+      runtime: 'SQL',
+      resource: 'CosmosDb'
     }
 ];
 
@@ -66,7 +68,8 @@ export default (props) => {
             type: addon.type,
             runtime: addon.runtime,
             status: 'pending',
-            isPrivate: false
+            isPrivate: true,
+            resource: addon.resource
           }
         });
       }

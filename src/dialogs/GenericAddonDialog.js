@@ -32,7 +32,8 @@ export default (props) => {
             name: addon.name,
             label: addon.label,
             type: addon.type,
-            runtime: addon.runtime
+            runtime: addon.runtime,
+            resource: addon.resource
         });
     }
 
