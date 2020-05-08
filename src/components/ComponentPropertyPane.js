@@ -9,13 +9,11 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
     info: {
-        fontFamily: 'calibri',
         fontSize: 14
       },
     
       title: {
         flexGrow: 1,
-        fontFamily: 'calibri',
         fontSize: 16
       }
 }));

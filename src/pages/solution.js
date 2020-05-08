@@ -45,7 +45,6 @@ const useStyles = makeStyles((theme) => ({
   },
 
   info: {
-    fontFamily: 'calibri',
     fontSize: 14
   },
 
@@ -57,7 +56,6 @@ const useStyles = makeStyles((theme) => ({
 
   title: {
     flexGrow: 1,
-    fontFamily: 'calibri',
     fontSize: 16
   }
 }));
