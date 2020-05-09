@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button'
 import CanvasPane from '../components/CanvasPane'
 import ComponentPropertyPane from '../components/ComponentPropertyPane'
 import CssBaseline from '@material-ui/core/CssBaseline';
+import DevopsPane from '../components/DevOpsPane'
 import PublishIcon from '@material-ui/icons/Publish';
 import grey from '@material-ui/core/colors/grey';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -74,6 +75,26 @@ export default () => {
         resource: 'AppServices',
         display: {
           mode: 'auto'
+        },
+        devops: {
+          repo: {
+            type: 'Github',
+            url: '',
+            status: 'new'
+          },
+          staging: 
+          {
+            enabled: true, 
+            stages: [
+            {
+              name: 'staging',
+              isProd: false
+            },
+            {
+              name: 'production',
+              isProd: true
+            }]
+          }
         }
       }
     ],
@@ -187,6 +208,7 @@ export default () => {
               { selectedComponent
                 ? <div>
                     <ComponentPropertyPane selectedComponent={selectedComponent} />
+                    <DevopsPane component={selectedComponent} />
                     <AddonPane component={selectedComponent} onCreate={handleAddonCreate}/>
                   </div>
                 : <Typography className={classes.title} align='center'>
