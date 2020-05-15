@@ -33,12 +33,18 @@ const useStyles = makeStyles((theme) => ({
 
 export default (props) => {
     const classes = useStyles();
-    const {selectedComponent} = props;
+    const { selectedComponent, onComponentChange } = props;
 
     const [open, openCloseDialog] = React.useState(false);
+    const [componentName, setComponentName] = React.useState(selectedComponent.name);
+    const [componentNameTbc, setComponentNameTbc] = React.useState(selectedComponent.name);
 
     const handleEditName = () => {
         openCloseDialog(true);
+    }
+
+    const handleComponentNameChange = (event) => {
+        setComponentNameTbc(event.target.value);
     }
 
     const handleCloseDialog = () => {
@@ -47,6 +53,11 @@ export default (props) => {
 
     const handleUpdateName = () => {
         openCloseDialog(false);
+
+        selectedComponent.name = componentNameTbc;
+
+        setComponentName(componentNameTbc);
+        onComponentChange(selectedComponent);
     }
 
     return (
@@ -60,6 +71,8 @@ export default (props) => {
                     helperText="Enter the name of the selected component"
                     variant="outlined"
                     autoFocus
+                    defaultValue={componentName}
+                    onChange={handleComponentNameChange}
                     />
             </DialogContent>
             <DialogActions>
@@ -80,7 +93,7 @@ export default (props) => {
                 </Grid>
                 <Grid item xs={6}>
                     <Typography className={classes.info}>
-                        {selectedComponent.name}
+                        {componentName}
                     </Typography>
                 </Grid>
                 <Grid item xs={2}>

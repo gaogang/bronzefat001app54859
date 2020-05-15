@@ -132,7 +132,7 @@ export default () => {
           width: componentWidth,
           height: componentHeight
       }
-    };
+    }
 
     setComponents(
       components.concat([addonComponent])
@@ -146,6 +146,14 @@ export default () => {
     setConnections(
       connections.concat([connection])
     );
+  }
+
+  const handleComponentChange = (targetComponent) => {
+    let filtered = components.filter((element) => {
+      return element.id !== targetComponent.id;
+    });
+
+    setComponents(filtered.concat([targetComponent]));
   }
 
   // Work out where the componets are
@@ -207,7 +215,7 @@ export default () => {
             <Box className={classes.sidebar}>
               { selectedComponent
                 ? <div>
-                    <ComponentPropertyPane selectedComponent={selectedComponent} />
+                    <ComponentPropertyPane selectedComponent={selectedComponent} onComponentChange={handleComponentChange} />
                     <DevopsPane component={selectedComponent} />
                     <AddonPane component={selectedComponent} onCreate={handleAddonCreate}/>
                   </div>
