@@ -105,24 +105,24 @@ export default (props) => {
             <Grid container spacing={1}>
                 <Grid item xs={4}>
                     <Typography className={classes.info_hl}>
-                    Type:
-                    </Typography>
-                </Grid>
-                <Grid item xs>
-                    <Typography className={classes.info}>
-                    {selectedComponent.type}
-                    </Typography>
-                </Grid>
-            </Grid>
-            <Grid container spacing={1}>
-                <Grid item xs={4}>
-                    <Typography className={classes.info_hl}>
                     Status:
                     </Typography>
                 </Grid>
                 <Grid item xs>
                     <Typography className={classes.info}>
                     {selectedComponent.status}
+                    </Typography>
+                </Grid>
+            </Grid>
+            <Grid container spacing={1}>
+                <Grid item xs={4}>
+                    <Typography className={classes.info_hl}>
+                    Type:
+                    </Typography>
+                </Grid>
+                <Grid item xs>
+                    <Typography className={classes.info}>
+                    {selectedComponent.type}
                     </Typography>
                 </Grid>
             </Grid>
