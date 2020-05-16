@@ -77,6 +77,7 @@ export default (props) => {
       }
 
     return (
+      component.resource === 'Function' || component.resource === 'AppServices' ? 
         <div>
             <GenericAddonDialog 
                 addon={addon} 
@@ -104,5 +105,6 @@ export default (props) => {
                 </List>
             </Box>
         </div>
+        : null
     );
 }

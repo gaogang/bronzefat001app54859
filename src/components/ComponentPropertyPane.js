@@ -5,12 +5,9 @@ import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Divider from '@material-ui/core/Divider';
 import EditIcon from '@material-ui/icons/Edit';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -124,58 +121,17 @@ export default (props) => {
                 </Grid>
             </Grid>
             <Grid container spacing={1}>
-            <Grid item xs={4}>
-                <Typography className={classes.info_hl}>
-                Runtime:
-                </Typography>
+                <Grid item xs={4}>
+                    <Typography className={classes.info_hl}>
+                    Runtime:
+                    </Typography>
+                </Grid>
+                <Grid item xs>
+                    <Typography className={classes.info}>
+                    {selectedComponent.runtime}
+                    </Typography>
+                </Grid>
             </Grid>
-            <Grid item xs>
-                <Typography className={classes.info}>
-                {selectedComponent.runtime}
-                </Typography>
-            </Grid>
-            </Grid>
-            <Grid container spacing={1}>
-            <Grid item xs={4}>
-                <Typography className={classes.info_hl}>
-                Resource group:
-                </Typography>
-            </Grid>
-            <Grid item xs>
-                <Typography className={classes.info}>
-                {selectedComponent.resourceGroup}
-                </Typography>
-            </Grid>
-            </Grid>
-            <Grid container spacing={1}>
-            <Grid item xs={4}>
-                <Typography className={classes.info_hl}>
-                Subscription:
-                </Typography>
-            </Grid>
-            <Grid item xs>
-                <Typography className={classes.info}>
-                {selectedComponent.subscription}
-                </Typography>
-            </Grid>
-            </Grid>
-        </Box>
-        <Box style={{marginTop: 20}}>
-            <Typography className={classes.info} align='left'>
-            Network security
-            </Typography>
-            <Divider />
-            <FormControlLabel
-            control={
-                <Switch
-                name="isPrivate"
-                color="primary"
-                checked={selectedComponent.isPrivate}
-                />
-            }
-            label={<Typography className={classes.info} align='left'>Internet facing:</Typography>}
-            labelPlacement="start"
-            />
         </Box>
     </div>
 )}
