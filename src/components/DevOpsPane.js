@@ -63,13 +63,6 @@ export default (props) => {
               </ButtonGroup>
             </div>
           }
-          <Typography className={classes.info} align='left'>
-            Repo
-          </Typography>
-          <Divider />
-          <Typography className={classes.info} align='left'>
-            {component.devops.repo.url ? component.devops.repo.url : `(new) ${component.name}`}
-          </Typography>
         </Box>
       : null
     );

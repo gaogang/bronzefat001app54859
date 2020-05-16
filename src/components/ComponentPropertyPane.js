@@ -36,7 +36,6 @@ export default (props) => {
     const { selectedComponent, onComponentChange } = props;
 
     const [open, openCloseDialog] = React.useState(false);
-    const [componentName, setComponentName] = React.useState(selectedComponent.name);
     const [componentNameTbc, setComponentNameTbc] = React.useState(selectedComponent.name);
 
     const handleEditName = () => {
@@ -55,8 +54,6 @@ export default (props) => {
         openCloseDialog(false);
 
         selectedComponent.name = componentNameTbc;
-
-        setComponentName(componentNameTbc);
         onComponentChange(selectedComponent);
     }
 
@@ -71,7 +68,7 @@ export default (props) => {
                     helperText="Enter the name of the selected component"
                     variant="outlined"
                     autoFocus
-                    defaultValue={componentName}
+                    defaultValue={selectedComponent.name}
                     onChange={handleComponentNameChange}
                     />
             </DialogContent>
@@ -93,7 +90,7 @@ export default (props) => {
                 </Grid>
                 <Grid item xs={6}>
                     <Typography className={classes.info}>
-                        {componentName}
+                        {selectedComponent.name}
                     </Typography>
                 </Grid>
                 <Grid item xs={2}>

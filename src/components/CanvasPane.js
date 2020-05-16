@@ -3,8 +3,11 @@ import React from 'react';
 import AzFunc from '../icons/azure/FunctionApps.svg'
 import AzAppServices from '../icons/azure/AppServices.svg'
 import AzCosmosDb from '../icons/azure/CosmosDB.svg'
+import Github from '../icons/azure/Octocat.png'
+
 import { Stage, Layer, Group, Rect, Text, Arrow, Image } from 'react-konva';
 import useImage from 'use-image';
+
 import ConnectComponents from '../utils/ConnectComponents';
 
 export default (props) => {
@@ -21,7 +24,8 @@ export default (props) => {
     const azIcons = {
         AppServices: useImage(AzAppServices),
         CosmosDb: useImage(AzCosmosDb),
-        Function: useImage(AzFunc)
+        Function: useImage(AzFunc),
+        Github: useImage(Github)
     }
 
     return(

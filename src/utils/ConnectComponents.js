@@ -85,7 +85,7 @@ function createConnectionLines(sources, target, side) {
             ix = x;
             iy = y - i;
         } else if(side === 'bottom') {
-            x = target.display.x + counter * (target.display.width / (source.length + 1));
+            x = target.display.x + counter * (target.display.width / (sources.length + 1));
             y = target.display.y + target.display.height;
 
             ix = x;
@@ -103,6 +103,8 @@ function createConnectionLines(sources, target, side) {
             ix = x + i;
             iy = y;
         }
+
+        console.log(`Connector x1 = ${source.display.x + source.display.width / 2} y1 = ${source.display.y + source.display.height / 2} ix=${ix} iy=${iy} x2 = ${x}, y2 = ${y}`);
 
         let connectionLine = {
             from: source,

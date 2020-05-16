@@ -77,11 +77,6 @@ export default () => {
           mode: 'auto'
         },
         devops: {
-          repo: {
-            type: 'Github',
-            url: '',
-            status: 'new'
-          },
           staging: 
           {
             enabled: true, 
@@ -96,9 +91,26 @@ export default () => {
             }]
           }
         }
+      },
+
+      {
+        id: 'bb 2',
+        order: 0,
+        name: 'Github',
+        type: 'Repo',
+        runtime: 'Github',
+        status: 'pending',
+        isPrivate: false,
+        resource: 'Github',
+        display: {
+          mode: 'auto'
+        }
       }
     ],
-    connections: []
+    connections: [{
+      from: 'bb 1',
+      to: 'bb 2'
+    }]
   };
 
   const classes = useStyles();
