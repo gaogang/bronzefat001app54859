@@ -10,6 +10,7 @@ import CanvasPane from '../components/CanvasPane'
 import ComponentPropertyPane from '../components/ComponentPropertyPane'
 import CssBaseline from '@material-ui/core/CssBaseline';
 import DevopsPane from '../components/DevOpsPane'
+import NewAppDialog from '../dialogs/NewAppDialog'
 import PublishIcon from '@material-ui/icons/Publish';
 import grey from '@material-ui/core/colors/grey';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -117,12 +118,13 @@ export default () => {
   const [components, setComponents] = React.useState(buildingBlocks.components);
   const [connections, setConnections] = React.useState(buildingBlocks.connections);
   const [selectedComponent, selectComponent] = React.useState(null);
+  const [newAppDialogOpen, setNewAppDialogOpen] = React.useState(false);
 
   const componentWidth = 180;
   const componentHeight = 50;
 
   const handleNewBbClick = () => {
-        alert('create new bb');
+    setNewAppDialogOpen(true);
   }
 
   const handleComponentClick = (component) => {
@@ -160,6 +162,11 @@ export default () => {
     );
   }
 
+  const handleComponentCreate = (newComponents) => {
+    setNewAppDialogOpen(false);
+    setComponents(components.concat(newComponents));
+  }
+
   const handleComponentChange = (targetComponent) => {
     let filtered = components.filter((element) => {
       return element.id !== targetComponent.id;
@@ -186,6 +193,7 @@ export default () => {
   return (
     <div className={classes.root}>
       <CssBaseline />
+      <NewAppDialog open={newAppDialogOpen} onCreate={handleComponentCreate}/>
       <AppBar position="static" className={classes.appBar} elevation={0}>
         <Toolbar className={classes.toolbar}>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
